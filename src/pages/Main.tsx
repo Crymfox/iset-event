@@ -33,7 +33,7 @@ const Main = () => {
     <img className="absolute top-0 h-full w-full opacity-70" src="/wallpaper.jpg" />
     <div className="mx-4 relative">
       <h1 className="text-4xl text-white font-bold text-center my-2">Scoreboard</h1>
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 items-center sm:grid-cols-2 lg:grid-cols-3">
         <AnimatePresence>
           {teams.map((card, index) => {
             return <motion.div

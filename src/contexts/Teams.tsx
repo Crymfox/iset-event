@@ -2,7 +2,7 @@ import React, { createContext, useState } from 'react';
 
 // Define the shape of the team object
 export interface Team {
-    id: number;
+    id?: number;
     imageSrc: string;
     title: string;
     score?: number;
@@ -44,22 +44,6 @@ export const TeamsProvider = ({ children }: { children: React.ReactNode }) => {
     const deleteTeam = (team: Team) => {
         setTeams((prevTeams) => prevTeams.filter((t) => t !== team));
     }
-
-    // // Example of fetching teams data from an API
-    // useEffect(() => {
-    //     // Replace this with your actual API call
-    //     const fetchTeams = async () => {
-    //         try {
-    //             const response = await fetch('https://api.example.com/teams');
-    //             const data = await response.json();
-    //             setTeams(data);
-    //         } catch (error) {
-    //             console.error('Error fetching teams:', error);
-    //         }
-    //     };
-
-    //     fetchTeams();
-    // }, []);
 
     return (
         <TeamsContext.Provider value={{ teams, addTeam, setTeams, sortTeams, deleteTeam }}>

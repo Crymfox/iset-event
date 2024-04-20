@@ -17,10 +17,10 @@ const Card: React.FC<CardProps> = ({ imageSrc, title, score, onChangeFunction, r
     //     setScore(Number(event.target.value));
     // }
     return (
-        <div className={`flex items-center ${rank == 1 ? "bg-yellow-500/40" : rank == 2 ? "bg-gray-300/50" : rank == 3 ? "bg-amber-700/40" : rank! <= 8 ? "bg-green-300/50" : "bg-blue-500/50"} rounded-lg shadow-lg p-2 relative`}>
+        <div className={`flex items-center ${rank == 1 ? "bg-yellow-500/40" : rank == 2 ? "bg-gray-300/50" : rank == 3 ? "bg-amber-700/40" : rank! <= 8 ? "bg-green-300/50" : final ? "bg-blue-500" : "bg-blue-500/50"} rounded-lg shadow-lg p-2 relative ${final ? "max-w-[14rem]" : ""}`}>
             <img src={imageSrc} alt={title} className="w-16 h-16 rounded-full mr-4" />
             <div className="flex">
-                <h2 className="text-xl font-bold max-w-[12rem]">{title}</h2>
+                <h2 className={`${final ? "text-lg" : "text-xl"} font-bold max-w-[12rem]`}>{title}</h2>
                 {!final && <input
                     type="number"
                     value={score}
@@ -29,7 +29,7 @@ const Card: React.FC<CardProps> = ({ imageSrc, title, score, onChangeFunction, r
                     onBlur={onBlurFunction}
                 />}
             </div>
-            {/* // the rank badge in the end of the card */}
+            {/* the rank badge in the end of the card */}
             {!final && <div className={` absolute right-3 flex items-center justify-center text-gray-800 ${rank! > 3 ? "border-2 border-gray-800" : ""} px-2 rounded-full font-bold text-3xl`}>
                 {
                     rank == 1 ? "🥇" : rank == 2 ? "🥈" : rank == 3 ? "🥉" : rank

@@ -1,15 +1,16 @@
 import React, { useState, useContext } from 'react';
-// import Card from './Card.tsx';
 import { TeamsContext } from '../contexts/Teams.tsx';
 import { useHotkeys } from 'react-hotkeys-hook';
 import { Team } from '../contexts/Teams.tsx';
 import Card from './Card.tsx';
+import { FinalsContext } from '../contexts/Finals.tsx';
 
 interface CreatorProps {
     final?: boolean;
+    first?: boolean;
 }
 
-const Creator: React.FC<CreatorProps> = ({ final }) => {
+const Creator: React.FC<CreatorProps> = ({ final, first }) => {
     const [teamTitle, setTeamTitle] = useState('');
     const [teamPicture, setTeamPicture] = useState('');
     const { addTeam, teams } = useContext(TeamsContext);
@@ -34,59 +35,109 @@ const Creator: React.FC<CreatorProps> = ({ final }) => {
     };
 
     const handleAddTeam = () => {
-        // TODO: Add team using teamTitle and teamPicture
-        // You can use this data to render the Card component
-        addTeam({
+        if (teamTitle.length > 0) addTeam({
             id: teams.length + 1,
             title: teamTitle,
             imageSrc: teamPicture,
             score: 0,
         });
+        setTeamTitle('');
+        // setTeamPicture('');
     };
 
-    const [finalist, setFinalist] = useState<Team>({} as Team)
+    const [finalist, setFinalist] = useState<Team>({title: '', imageSrc: ''})
 
     const handleAddFinalist = () => {
-        setFinalist({
-            id: teams.length + 1,
-            title: teamTitle,
-            imageSrc: teamPicture
-        });
+        if (teamTitle.length > 0) {
+            setFinalist({
+                title: teamTitle,
+                imageSrc: teamPicture
+            });
+            setStart(false)
+        }
     }
 
+    const handleDeleteFinalist = () => {
+        if (first) setFinalist({title: '', imageSrc: ''})
+        setStart(first)
+    }
 
     useHotkeys('enter', () => {
-        final ? handleAddFinalist() : handleAddTeam()
+        if (!final) {
+            handleAddTeam()
+        }
     }, {enableOnFormTags: ["input"]})
 
+    const { sender, receiver } = useContext(FinalsContext)
+
+    const [start, setStart] = useState(first)
+
+    const handleOnDragStart = (e: React.DragEvent<HTMLDivElement>) => {
+        sender.current = finalist
+        e.dataTransfer.setData('text', JSON.stringify(finalist))
+        // setFinalist({title: '', imageSrc: ''})
+    }
+
+    const handleOnDragEnd = () => {
+        if (receiver.current == sender.current) {
+            setFinalist(receiver.current)
+        }
+    }
+
+    const handleOnDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+        e.preventDefault()
+        receiver.current = sender.current
+    }
+
+    const handleOnDrag = () => {
+        setFinalist({title: '', imageSrc: ''})
+    }
+
+    const handleOnDrop = (e: React.DragEvent<HTMLDivElement>) => {
+        const data = e.dataTransfer.getData('text')
+        if (data) {
+            const team = JSON.parse(data)
+            sender.current = {title: '', imageSrc: ''}
+            receiver.current = team
+            setFinalist(team)
+        }
+    }
+
     return (
-        final && finalist.title ? <Card imageSrc={finalist.imageSrc} title={finalist.title} final /> :
-        <div className="flex gap-2 items-center justify-center">
-            <label htmlFor="teamPicture" className="cursor-pointer flex justify-center">
-                <input
-                    type="file"
-                    id="teamPicture"
-                    accept="image/*"
-                    className="hidden"
-                    onChange={handlePictureChange}
-                />
-                <span className="text-4xl text-gray-500">+</span>
-            </label>
-            <input
-                type="text"
-                placeholder="Team Title"
-                value={teamTitle}
-                onChange={handleTitleChange}
-                className="p-2 border border-gray-300 rounded"
-            />
-            <button
-                onClick={final ? handleAddFinalist : handleAddTeam}
-                className="p-2 bg-blue-500 text-white rounded"
-            >
-                Add Team
-            </button>
+        <div className='min-w-[14rem]' draggable={final && finalist.title != ''} onDragStart={handleOnDragStart} onDrag={handleOnDrag} onDragEnd={handleOnDragEnd}>
+            {
+                final && finalist.title ? <Card imageSrc={finalist.imageSrc} title={finalist.title} onDeleteFunction={handleDeleteFinalist} final /> : (final ? start : true) ?
+                <div className="flex gap-2 items-center justify-center">
+                    <label htmlFor="teamPicture" className="cursor-pointer flex justify-center">
+                        <input
+                            type="file"
+                            id="teamPicture"
+                            accept="image/*"
+                            className="hidden"
+                            onChange={handlePictureChange}
+                        />
+                        <span className="text-3xl text-white border-2 rounded-full px-2">+</span>
+                    </label>
+                    <input
+                        type="text"
+                        placeholder="Team Title"
+                        value={teamTitle}
+                        onChange={handleTitleChange}
+                        className="p-2 border border-gray-300 rounded"
+                    />
+                    <button
+                        onClick={final ? handleAddFinalist : handleAddTeam}
+                        className="p-2 bg-blue-500 text-white rounded"
+                    >
+                        Add Team
+                    </button>
+                </div> : <div
+                    className='border-2 border-black bg-white w-[14rem] h-[5rem] rounded-lg'
+                    onDragOver={handleOnDragOver}
+                    onDrop={handleOnDrop}
+                ></div>
+            }
         </div>
-        
     );
 };
 
