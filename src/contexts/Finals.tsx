@@ -1,6 +1,5 @@
 import React, { createContext, useRef } from 'react';
 
-// Define the shape of the team object
 export interface Team {
     id?: number;
     imageSrc: string;
@@ -9,19 +8,16 @@ export interface Team {
     rank?: number;
 }
 
-// Define the shape of the context
 interface FinalsContextType {
     sender: React.MutableRefObject<Team>;
     receiver: React.MutableRefObject<Team>;
 }
 
-// Create the context
 export const FinalsContext = createContext<FinalsContextType>({
     sender: { current: { title: '', imageSrc: '' } },
     receiver: { current: { title: '', imageSrc: '' } },
 });
 
-// Create the provider component
 export const FinalsProvider = ({ children }: { children: React.ReactNode }) => {
     
     const sender = useRef<Team>({ title: '', imageSrc: '' });

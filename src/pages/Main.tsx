@@ -10,14 +10,12 @@ const Main = () => {
   const { teams, setTeams, sortTeams, deleteTeam } = useContext(TeamsContext);
 
   const handleOnChange = (event: React.ChangeEvent<HTMLInputElement>, index: number) => {
-    // set the score of the card at the given index
     const newTeams = [...teams]
     newTeams[index].score = Number(event.target.value)
     setTeams(newTeams)
   }
 
   const handleOnBlur = () => {
-    // sort the teams based on the score
     const sortedTeams = sortTeams!(teams)
     setTeams(sortedTeams)
   }
@@ -38,7 +36,6 @@ const Main = () => {
           {teams.map((card, index) => {
             return <motion.div
               key={card.id}
-              // smooth animation when sorting
               layout
               initial={{ opacity: 0}}
               animate={{ opacity: 1, transition: { duration: 0.5 }}}
@@ -46,7 +43,6 @@ const Main = () => {
               transition={{ duration: 0.5, type: 'tween'}}
             >
               <Card
-                // key={index}
                 imageSrc={card.imageSrc}
                 title={card.title}
                 score={card.score!}

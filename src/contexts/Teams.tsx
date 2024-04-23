@@ -1,6 +1,5 @@
 import React, { createContext, useState } from 'react';
 
-// Define the shape of the team object
 export interface Team {
     id?: number;
     imageSrc: string;
@@ -9,7 +8,6 @@ export interface Team {
     rank?: number;
 }
 
-// Define the shape of the context
 interface TeamsContextType {
     teams: Team[];
     addTeam: (team: Team) => void;
@@ -18,7 +16,6 @@ interface TeamsContextType {
     deleteTeam?: (team: Team) => void;
 }
 
-// Create the context
 export const TeamsContext = createContext<TeamsContextType>({
     teams: [],
     addTeam: () => {},
@@ -27,11 +24,9 @@ export const TeamsContext = createContext<TeamsContextType>({
     deleteTeam: () => {},
 });
 
-// Create the provider component
 export const TeamsProvider = ({ children }: { children: React.ReactNode }) => {
     const [teams, setTeams] = useState<Team[]>([]);
 
-    // Function to add a new team to the context
     const addTeam = (team: Team) => {
         setTeams((prevTeams) => [...prevTeams, team]);
     };

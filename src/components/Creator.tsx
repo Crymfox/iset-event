@@ -22,9 +22,6 @@ const Creator: React.FC<CreatorProps> = ({ final, first }) => {
     const handlePictureChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
         if (file) {
-            // TODO: Handle file upload and set the teamPicture state
-
-            // Example of handling file upload
             const reader = new FileReader();
             reader.onload = (e) => {
                 const dataURL = e.target?.result;
@@ -42,7 +39,6 @@ const Creator: React.FC<CreatorProps> = ({ final, first }) => {
             score: 0,
         });
         setTeamTitle('');
-        // setTeamPicture('');
     };
 
     const [finalist, setFinalist] = useState<Team>({title: '', imageSrc: ''})
@@ -75,7 +71,6 @@ const Creator: React.FC<CreatorProps> = ({ final, first }) => {
     const handleOnDragStart = (e: React.DragEvent<HTMLDivElement>) => {
         sender.current = finalist
         e.dataTransfer.setData('text', JSON.stringify(finalist))
-        // setFinalist({title: '', imageSrc: ''})
     }
 
     const handleOnDragEnd = () => {
